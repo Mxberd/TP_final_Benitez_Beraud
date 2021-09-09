@@ -24,7 +24,7 @@ library(rvest)
 library(tidyverse)
 library(tibble)
 library(stringr)
-library(datapasta)
+library(glue)
 
 #1 - Queremos trabajar sobre el tema del arbolado urbano en la ciudad de Buenos Aires, particularmente 
 #sobre la presencia de especies autoctonas significativas que enriquezcan la biodiversidad. 
@@ -107,5 +107,4 @@ Especies <- Especies %>%
 #Usamos la combinacion de case_when y de str_detect para eliminar formulas como "Para jardines, 
 #Para lugares soleados". La preposicion "Para" nos permite detectar esas formulas y luego eliminarlas
 #Renombramos la columna como "especies nativas". #Evitemos confusiones.
-
 
