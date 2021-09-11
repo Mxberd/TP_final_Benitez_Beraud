@@ -24,8 +24,11 @@ library(rvest)
 library(tidyverse)
 library(tibble)
 library(stringr)
-library(glue)
-library(datapasta)
+library(osmdata)
+library(sf)
+library(ggmap)
+library(leaflet)
+library(datos)
 
 #1 - **Una pregunta y presentacion del tema**
 
@@ -207,3 +210,32 @@ ggplot(filter(Palermo_Repres_02, cantidad_registrada>50))+
 
 #Sin embargo debemos analizar la distribucion de esos ejemplares, ya que podria haber diferencias sectoriales entre las distintas
 #partes del barrio. 
+
+#Para ello recurrimos a la library sf. Nececitamos hacer alguna conversion de formato con #st_as_sf
+
+Arbolado_Palermo_03 <- Arbolado_Palermo_02 %>% 
+  st_as_sf(coords = c("long", "lat"), crs = 4326)
+
+#transformas los datos espaciales en geometria sf y le incorporamos la proyeccion.
+
+#Ahora vamos a producir un mapa usando las herramientas que nos prove OSMDATA y la library #Leaflet
+
+bbox_Palermo<- getbb("Comuna 14,Ciudad Autónoma de Buenos Aires, Argentina", format_out = "sf_polygon")
+
+bbox_Palermo<- make_bbox(-34.5889, -58.4306)
+mapa_Palermo <- get_stamenmap(bbox_Palermo,zoom = 12)
+
+ggmap(mapa_Palermo)+
+  geom_sf(mapping = Arbolado_Palermo_02, aes(x=lat, y=long), inherit.aes = FALSE)+
+  labs(title="Arboles"
+       subtitle="arboles"
+       caption="BA data")+
+  theme_void()
+
+
+# Estamos listos para ubicar en ese mapa nuestros datos.
+
+ggmap(Palermo_mapa)+
+  geom_sf(data=Arbolado_Palermo_03, color=origen, size=1.5, inherit.aes = FALSE)
+  
+  
