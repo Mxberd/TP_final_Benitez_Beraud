@@ -175,7 +175,7 @@ Palermo_Repres_02 <- Palermo_Repres %>%
 
 Palermo_Repres_02 <- Palermo_Repres_02 %>% 
   mutate(origen=case_when(origen=="nativa"
-  ~ origen, TRUE ~ "exotica o sin idenficiar"))
+  ~ origen, TRUE ~ "exotica o sin idenficar"))
 
 #Habiendo cerrado la etapa de clasificacion de clasificacion tenemos que volver a ligar esta informacion a 
 #nuestros datos espaciales para avanzar con los mapeos de la etapa siguiente del ejercicio. #right_joint.
@@ -218,24 +218,49 @@ Arbolado_Palermo_03 <- Arbolado_Palermo_02 %>%
 
 #transformas los datos espaciales en geometria sf y le incorporamos la proyeccion.
 
-#Ahora vamos a producir un mapa usando las herramientas que nos prove OSMDATA y la library #Leaflet
+#Ahora vamos a producir un mapa usando las herramientas que nos prove OSMDATA
 
-bbox_Palermo<- getbb("Comuna 14,Ciudad Autónoma de Buenos Aires, Argentina", format_out = "sf_polygon")
+#Extraer Coordenadas
 
-bbox_Palermo<- make_bbox(-34.5889, -58.4306)
-mapa_Palermo <- get_stamenmap(bbox_Palermo,zoom = 12)
+barrios.caba <- st_read("Datos/barrios.geojson") %>%
+  filter(barrio=="PALERMO")
+
+#Armamos nuestro mapa sobre la base de datos abiertos de OSM DATA. 
+#Recortamos #make_bbox para determinar nuestro area. Las coordenadas corresponden a la consulta en #Google.
+
+
+bbox_Palermo<- as.numeric(st_bbox(barrios.caba))
+mapa_Palermo <- get_stamenmap(bbox = bbox_Palermo, maptype = "toner-lite",  zoom=14)
+
+
+
+#Proponemos visualizacion!
+#Siendo unicamente las especies nativas las relevantes, proponemos algunos ajustes de nuestros datos.
+#Usaremos #casewhen para establecer algunas condiciones.
+
+Arbolado_Palermo_04 <- Arbolado_Palermo_02 %>% 
+  mutate(nombre_cientifico=case_when(origen=="exotica o sin idenficar"
+~ "Exotica", TRUE ~ nombre_cientifico))
+
+Arbolado_Palermo_04 <- Arbolado_Palermo_04 %>% 
+  filter(!nombre_cientifico=="Exotica")
+
+#Despues de algunas pruebas decidimos filtrar las especies exoticas, ya que estas terminan ocupando la 
+#amplia mayoria. El mapa de puntos no seria herramienta suficiente para entender algun #patron o #tendencia
+#en nuestro arboaldo nativo
 
 ggmap(mapa_Palermo)+
-  geom_sf(mapping = Arbolado_Palermo_02, aes(x=lat, y=long), inherit.aes = FALSE)+
-  labs(title="Arboles"
-       subtitle="arboles"
-       caption="BA data")+
+  geom_sf(data=barrios.caba,inherit.aes = F,color = "orange",size = .7,alpha = .2)+
+  geom_point(data=Arbolado_Palermo_04, aes(x=long, y=lat, color= nombre_cientifico),alpha=0.5)+
+  labs(title = "Barrio de Palermo, Especies", subtitle = "Estudio de relevancia de Nativas", caption="fuentes varias")+
+  scale_fill_manual(values = c("tan1", "steelblue4","steelblue1", "springgreen4", "springgreen3", "yellowgreen", "yellow4",
+  "yellow2", "wheat3", "violetred3", "violetred","violet", "turquoise4", "turquoise1", "tomato4", "tomato", "slateblue4","lightpink"),  aesthetics = "color")+
   theme_void()
-
-
-# Estamos listos para ubicar en ese mapa nuestros datos.
-
-ggmap(Palermo_mapa)+
-  geom_sf(data=Arbolado_Palermo_03, color=origen, size=1.5, inherit.aes = FALSE)
   
-  
+#Aunque no de manera contundente, haciendo falta mas visualizaciones, podemos afirmar que el Jacaranda y la Tipo presentarian 
+#algun tipo de patron de concentracion. El jacaranda en las avenidas, y la tipa en algunos nucleos barriales. 
+#Debemos seguir nuestra investigacion.
+
+
+
+
