@@ -297,6 +297,8 @@ ggmap(mapa_Palermo) +
 #A su vez a partir de este estudio podemos empezar a pensar en multiplicar estos espacios de concentracin de nativas donde se pueda para desarrollar algun concepto de red
 #ya que dificilmente podremos revertir en el corto plazo la predominancia de las exoticas. 
 
+#CIERRE
+
 
 
 
