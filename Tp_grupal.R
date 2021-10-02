@@ -261,6 +261,42 @@ ggmap(mapa_Palermo)+
 #algun tipo de patron de concentracion. El jacaranda en las avenidas, y la tipa en algunos nucleos barriales. 
 #Debemos seguir nuestra investigacion.
 
+#Proponemos elaborar mapas de calor
+
+ggmap(mapa_Palermo) +
+  geom_sf(data=barrios.caba,inherit.aes = F,color = "grey",size = .7,alpha = .8)+
+  geom_bin2d(data = Arbolado_Palermo_04, 
+             aes(x=long, y=lat), bins=35, alpha=0.8)+
+  theme(legend.position="right",
+        legend.direction = "vertical",
+        legend.key.size = unit(0.25, "cm"),
+        legend.key.width = unit(0.4,"cm"),
+        legend.title=element_text(size=7),
+        legend.text=element_text(size=7))+
+  labs(title = "Distribucion arbolado",
+       subtitle = "Patrones de distribucion especies autoctonas",
+       fill = "Incidencia",
+       caption = "Fuente: BA Data")+
+  scale_fill_viridis_c(option = "magma", direction=-1)+
+  facet_wrap(~nombre_cientifico)+
+  theme_void()
+
+#Los mapas de calor nos permiten extraer conclusiones mas claras sobre la distribucion de las especies autoctonas.
+
+#Considerando las conclusiones previas:
+#Como habiamos detectado antes al comparar valores absolutos, sabemos que predominan las especies exoticas en general. 
+#Ademas la diversidad (si tomamos en cuenta las especies suficientemente representativas) de las especies autoctonas, a su vez
+#tambien es baja.
+
+#El mapa de calor ayuda a entender que efectivamente hay tendencias a concentrarse en las plantaciones de las dos especies nativas mas representativas
+#El Jacaranda y la Tipa. 
+
+#Si bien ya podemos responder a la pregunta original diciendo que las espeies nativas tienen baja representatividad,
+#el caso de Palermo nos permite ver que pese a ello, tienen tendencias a concentrarse generando sub-unidades territoriales donde su representatvidad aumenta.
+#Aunque excede los alcances de este estudio, podriamos imaginar un estudio nuevo sobre la base de unidades de analisis mas pequeñas que un barrio.
+#A su vez a partir de este estudio podemos empezar a pensar en multiplicar estos espacios de concentracin de nativas donde se pueda para desarrollar algun concepto de red
+#ya que dificilmente podremos revertir en el corto plazo la predominancia de las exoticas. 
+
 
 
 
