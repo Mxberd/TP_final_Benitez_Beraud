@@ -300,5 +300,3 @@ ggmap(mapa_Palermo) +
 #CIERRE
 
 
-
-
