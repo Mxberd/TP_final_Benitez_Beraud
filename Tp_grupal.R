@@ -298,5 +298,3 @@ ggmap(mapa_Palermo) +
 #ya que dificilmente podremos revertir en el corto plazo la predominancia de las exoticas. 
 
 #CIERRE
-
-
